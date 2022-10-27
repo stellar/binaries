@@ -24,6 +24,7 @@ jobs:
         version: 0.5.0
         ref: v3
     - run: cargo-set-rust-version
+      continue-on-error: true
 
   # complete:
   #   if: always()
