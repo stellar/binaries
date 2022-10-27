@@ -23,7 +23,8 @@ jobs:
         name: cargo-set-rust-version
         version: 0.5.0
         ref: v3
-    - run: cargo-set-rust-version
+    - shell: bash
+      run: cargo-set-rust-version
       continue-on-error: true
 
   # complete:
