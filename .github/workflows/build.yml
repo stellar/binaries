@@ -92,7 +92,7 @@ jobs:
       with:
         name: ${{ matrix.crate.name }}
         version: ${{ matrix.crate.version }}
-        ref: ${{ github.ref_name == 'main' && 'latest' || '' }}
+        ref: ${{ github.ref_name == 'main' && '' || 'latest'}}
     - shell: bash
       run: ${{ matrix.crate.name }}
       continue-on-error: true
