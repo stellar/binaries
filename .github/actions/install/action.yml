@@ -5,6 +5,8 @@ inputs:
     required: true
   version:
     required: true
+  ref:
+    required: false
 runs:
   using: "composite"
   steps:
@@ -16,5 +18,5 @@ runs:
   - shell: bash
     run: |
       file="${{ inputs.name }}-${{ inputs.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz"
-      ref="${{ github.ref_name }}"
-      curl -L https://github.com/stellar/binaries/releases/download/$ref/$file | tar xvz -C $HOME/.local/bin
+      ref="${{ inputs.ref || github.ref_name }}"
+      curl -fL https://github.com/stellar/binaries/releases/download/$ref/$file | tar xvz -C $HOME/.local/bin
