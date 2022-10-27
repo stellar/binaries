@@ -1,0 +1,70 @@
+name: Build and Release
+
+on:
+  workflow_call:
+  push:
+    # branches: [main]
+  pull_request:
+
+jobs:
+
+  complete:
+    if: always()
+    needs: build-rust
+    runs-on: ubuntu-latest
+    steps:
+    - if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+      run: exit 1
+
+  build-rust:
+    strategy:
+      matrix:
+        crate:
+        - name: cargo-workspaces
+          version: '0.2.35'
+        - name: cargo-hack
+          version: '0.5.16'
+        - name: cargo-set-rust-version
+          version: '0.5.0'
+        sys:
+        - os: ubuntu-latest
+        - os: macos-latest
+        - os: windows-latest
+    runs-on: ${{ matrix.sys.os }}
+    steps:
+    - uses: actions/checkout@v3
+    - run: rustup update
+    # - uses: stellar/actions/rust-cache@main
+    - run: cargo install --target-dir ~/.cargo/target --root . --locked --version ${{ matrix.crate.version }} ${{ matrix.crate.name }}
+    - shell: bash
+      run: tar cvfz ${{ matrix.crate.name }}-${{ matrix.crate.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz -C bin .
+    - uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.crate.name }}-${{ matrix.crate.version }}-${{ matrix.sys.os }}
+        path: '*.tar.gz'
+
+  release-create:
+    # if: github.ref_name == 'main'
+    needs: complete
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - id: set-tag
+      run: echo "tag=v$(git rev-list --count HEAD)" >> $GITHUB_OUTPUT
+    - run: gh release -R ${{ github.repository }} create --generate-notes --target ${{ github.sha }} "${{ steps.set-tag.outputs.tag }}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    outputs:
+      tag: ${{ steps.set-tag.outputs.tag }}
+
+  release-upload:
+    # if: github.ref_name == 'main'
+    needs: release-create
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/download-artifact@v3
+    - run: gh release -R ${{ github.repository }} upload --clobber "${{ needs.release-create.outputs.tag }}" **/*.tar.gz
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
