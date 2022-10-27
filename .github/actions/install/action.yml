@@ -1,0 +1,22 @@
+name: 'Install binary'
+description: 'Install binaries from the stellar/binaries repo'
+inputs:
+  name:
+    required: true
+  version:
+    required: true
+  ref:
+    required: false
+runs:
+  using: "composite"
+  steps:
+  - name: Setup Install Location
+    shell: bash
+    run: |
+      mkdir -p $HOME/.local/bin
+      echo "$HOME/.local/bin" >> $GITHUB_PATH
+  - shell: bash
+    run: |
+      file="${{ inputs.name }}-${{ inputs.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz"
+      ref="${{ inputs.ref || github.ref_name }}"
+      curl -fL https://github.com/stellar/binaries/releases/download/$ref/$file | tar xvz -C $HOME/.local/bin
