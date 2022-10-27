@@ -37,7 +37,7 @@ jobs:
     # - uses: stellar/actions/rust-cache@main
     - run: cargo install --target-dir ~/.cargo/target --root . --locked --version ${{ matrix.crate.version }} ${{ matrix.crate.name }}
     - shell: bash
-      run: tar cvfz ${{ matrix.crate.name }}-${{ matrix.crate.version }}-${{ matrix.sys.os }}.tar.gz -C bin .
+      run: tar cvfz ${{ matrix.crate.name }}-${{ matrix.crate.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz -C bin .
     - uses: actions/upload-artifact@v3
       with:
         name: ${{ matrix.crate.name }}-${{ matrix.crate.version }}-${{ matrix.sys.os }}
@@ -49,6 +49,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
     - id: set-tag
       run: echo "tag=v$(git rev-list --count HEAD)" >> $GITHUB_OUTPUT
     - run: gh release -R ${{ github.repository }} create --generate-notes --target ${{ github.sha }} "${{ steps.set-tag.outputs.tag }}"
