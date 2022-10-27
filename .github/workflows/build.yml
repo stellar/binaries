@@ -3,7 +3,7 @@ name: Build and Release
 on:
   workflow_call:
   push:
-    # branches: [main]
+    branches: [main]
   pull_request:
 
 jobs:
@@ -44,7 +44,7 @@ jobs:
         path: '*.tar.gz'
 
   release-create:
-    # if: github.ref_name == 'main'
+    if: github.ref_name == 'main'
     needs: complete
     runs-on: ubuntu-latest
     steps:
@@ -60,7 +60,7 @@ jobs:
       tag: ${{ steps.set-tag.outputs.tag }}
 
   release-upload:
-    # if: github.ref_name == 'main'
+    if: github.ref_name == 'main'
     needs: release-create
     runs-on: ubuntu-latest
     steps:
