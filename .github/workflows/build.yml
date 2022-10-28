@@ -36,7 +36,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - run: rustup update
-    # - uses: stellar/actions/rust-cache@main
+    - uses: stellar/actions/rust-cache@cachesupportmac
     - run: cargo install --target-dir ~/.cargo/target --root . --locked --version ${{ matrix.crate.version }} ${{ matrix.crate.name }}
     - shell: bash
       run: tar cvfz ${{ matrix.crate.name }}-${{ matrix.crate.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz -C bin .
