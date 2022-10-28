@@ -20,5 +20,5 @@ runs:
       REF: ${{ github.action_ref }}
     run: |
       file="${{ inputs.name }}-${{ inputs.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz"
-      ref="${{ inputs.ref || $REF }}"
+      ref="${{ inputs.ref || env.REF }}"
       curl -fL https://github.com/stellar/binaries/releases/download/$ref/$file | tar xvz -C $HOME/.local/bin
