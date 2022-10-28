@@ -35,9 +35,11 @@ jobs:
     runs-on: ${{ matrix.runs-on }}
     steps:
     - uses: actions/checkout@v3
-    - run: rustup update
+    - shell: bash
+      run: rustup update
     - uses: stellar/actions/rust-cache@cachesupportmac
-    - run: cargo install --target-dir ~/.cargo/target --root . --locked --version ${{ matrix.crate.version }} ${{ matrix.crate.name }}
+    - shell: bash
+      run: cargo install --target-dir ~/.cargo/target --root . --locked --version ${{ matrix.crate.version }} ${{ matrix.crate.name }}
     - shell: bash
       run: tar cvfz ${{ matrix.crate.name }}-${{ matrix.crate.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz -C bin .
     - uses: actions/upload-artifact@v3
