@@ -15,7 +15,7 @@ specified as a tag, as the tag also identifies which release to download the
 binaries from.
 
 ```yml
-- uses: stellar/binaries@v7
+- uses: stellar/binaries@v10
   with:
     name: cargo-set-rust-version
     version: 0.5.0
