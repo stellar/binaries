@@ -70,8 +70,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release-test:
-    if: always()
-    needs: [complete, release-upload]
+    needs: release-upload
     strategy:
       matrix:
         crate:
@@ -92,7 +91,6 @@ jobs:
       with:
         name: ${{ matrix.crate.name }}
         version: ${{ matrix.crate.version }}
-        ref: ${{ github.ref_name == 'main' && '' || 'v4'}}
     - shell: bash
       run: ${{ matrix.crate.name }}
       continue-on-error: true
