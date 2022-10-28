@@ -18,5 +18,5 @@ runs:
   - shell: bash
     run: |
       file="${{ inputs.name }}-${{ inputs.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz"
-      ref="${{ inputs.ref || github.ref_name }}"
+      ref="${{ inputs.ref || github.action_ref }}"
       curl -fL https://github.com/stellar/binaries/releases/download/$ref/$file | tar xvz -C $HOME/.local/bin
