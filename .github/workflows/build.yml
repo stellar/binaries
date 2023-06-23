@@ -20,6 +20,7 @@ jobs:
 
   cargo:
     strategy:
+      fail-fast: false
       matrix:
         crate:
         - name: cargo-workspaces
