@@ -20,6 +20,7 @@ jobs:
 
   cargo:
     strategy:
+      fail-fast: false
       matrix:
         crate:
         - name: cargo-workspaces
@@ -32,6 +33,8 @@ jobs:
           version: '0.11.6'
         - name: cargo-fuzz
           version: '0.11.2'
+        - name: soroban-cli
+          version: '0.8.7'
         runs-on:
         - ubuntu-latest
         - macos-latest
