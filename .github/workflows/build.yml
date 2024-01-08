@@ -37,6 +37,8 @@ jobs:
           version: '20.0.0-rc.4.1'
         - name: cargo-readme
           version: '3.3.1'
+        - name: cargo-semver-checks
+          version: '0.27.0'
         runs-on:
         - ubuntu-latest
         - macos-latest
