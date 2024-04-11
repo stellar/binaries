@@ -41,6 +41,8 @@ jobs:
           version: '0.27.0'
         - name: cargo-public-api
           version: '0.33.1'
+        - name: wasm-pack
+          version: '0.12.1'
         runs-on:
         - ubuntu-latest
         - macos-latest
