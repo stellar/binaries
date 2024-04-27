@@ -45,7 +45,7 @@ jobs:
           version: '0.12.1'
         runs-on:
         - ubuntu-latest
-        - macos-13 # x86
+        - macos-13 # amd64
         - macos-14 # arm64
         - windows-latest
     runs-on: ${{ matrix.runs-on }}
