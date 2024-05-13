@@ -43,6 +43,8 @@ jobs:
           version: '0.33.1'
         - name: wasm-pack
           version: '0.12.1'
+        - name: check-lockfile-intersection
+          version: '0.1.0'
         runs-on:
         - ubuntu-latest
         - macos-12 # amd64
