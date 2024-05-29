@@ -47,7 +47,9 @@ jobs:
           version: '0.2.92'
         - name: check-lockfile-intersection
           version: '0.1.0'
-        runs-on:
+        - name: wasm-cs
+          version: '1.0.0'
+    runs-on:
         - ubuntu-latest
         - macos-12 # amd64
         - macos-14 # arm64
