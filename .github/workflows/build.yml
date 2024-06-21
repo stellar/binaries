@@ -38,7 +38,7 @@ jobs:
         - name: cargo-readme
           version: '3.3.1'
         - name: cargo-semver-checks
-          version: '0.27.0'
+          version: '0.32.0'
         - name: cargo-public-api
           version: '0.33.1'
         - name: wasm-pack
