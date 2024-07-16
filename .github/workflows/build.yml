@@ -25,6 +25,8 @@ jobs:
         crate:
         - name: cargo-workspaces
           version: '0.2.35'
+        - name: cargo-workspaces
+          version: '0.3.4'
         - name: cargo-hack
           version: '0.5.28'
         - name: cargo-set-rust-version
