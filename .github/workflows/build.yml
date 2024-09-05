@@ -75,6 +75,32 @@ jobs:
         name: ${{ matrix.crate.name }}-${{ matrix.crate.version }}-${{ matrix.runs-on }}
         path: '*.tar.gz'
 
+  go:
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+        - name: actionlint
+          import-path: github.com/rhysd/actionlint/cmd/actionlint
+          version: 'v1.7.1'
+        runs-on:
+        - ubuntu-latest
+        - macos-12 # amd64
+        - macos-14 # arm64
+        - windows-latest
+    runs-on: ${{ matrix.runs-on }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-go@v5
+    - shell: bash
+      run: GOBIN="$PWD/bin" go install ${{ matrix.package.import-path }}@${{ matrix.package.version }}
+    - shell: bash
+      run: tar cvfz ${{ matrix.package.name }}-${{ matrix.package.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz -C bin .
+    - uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.package.name }}-${{ matrix.package.version }}-${{ matrix.runs-on }}
+        path: '*.tar.gz'
+
   release-create:
     if: github.ref_name == 'main'
     needs: complete
