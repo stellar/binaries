@@ -90,6 +90,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-go@v5
+      with:
+        go-version: stable
     - shell: bash
       run: GOBIN="$PWD/bin" go install ${{ matrix.package.import-path }}@${{ matrix.package.version }}
     - shell: bash
