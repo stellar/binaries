@@ -16,7 +16,7 @@ jobs:
 
   complete:
     if: always()
-    needs: [cargo]
+    needs: [cargo, go]
     runs-on: ubuntu-latest
     steps:
     - if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
@@ -30,7 +30,7 @@ jobs:
         - name: cargo-workspaces
           version: '0.2.35'
         - name: cargo-workspaces
-          version: '0.3.4'
+          version: '0.3.6'
         - name: cargo-hack
           version: '0.5.28'
         - name: cargo-set-rust-version
@@ -39,8 +39,6 @@ jobs:
           version: '0.11.6'
         - name: cargo-fuzz
           version: '0.12.0'
-        - name: soroban-cli
-          version: '20.0.0-rc.4.1'
         - name: cargo-readme
           version: '3.3.1'
         - name: cargo-semver-checks
@@ -73,6 +71,34 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: ${{ matrix.crate.name }}-${{ matrix.crate.version }}-${{ matrix.runs-on }}
+        path: '*.tar.gz'
+
+  go:
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+        - name: actionlint
+          import-path: github.com/rhysd/actionlint/cmd/actionlint
+          version: 'v1.7.1'
+        runs-on:
+        - ubuntu-latest
+        - macos-12 # amd64
+        - macos-14 # arm64
+        - windows-latest
+    runs-on: ${{ matrix.runs-on }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-go@v5
+      with:
+        go-version: stable
+    - shell: bash
+      run: GOBIN="$PWD/bin" go install ${{ matrix.package.import-path }}@${{ matrix.package.version }}
+    - shell: bash
+      run: tar cvfz ${{ matrix.package.name }}-${{ matrix.package.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz -C bin .
+    - uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.package.name }}-${{ matrix.package.version }}-${{ matrix.runs-on }}
         path: '*.tar.gz'
 
   release-create:
