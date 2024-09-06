@@ -122,7 +122,7 @@ jobs:
     needs: release-create
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
     - run: gh release -R ${{ github.repository }} upload --clobber "${{ needs.release-create.outputs.tag }}" **/*.tar.gz
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
