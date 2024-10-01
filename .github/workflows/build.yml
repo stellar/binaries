@@ -36,7 +36,7 @@ jobs:
         - name: cargo-set-rust-version
           version: '0.5.0'
         - name: cargo-edit
-          version: '0.11.6'
+          version: '0.13.0'
         - name: cargo-fuzz
           version: '0.12.0'
         - name: cargo-readme
