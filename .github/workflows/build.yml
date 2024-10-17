@@ -46,7 +46,7 @@ jobs:
         - name: cargo-public-api
           version: '0.33.1'
         - name: wasm-pack
-          version: '0.12.1'
+          version: '0.13.0'
         - name: wasm-bindgen-cli
           version: '0.2.92'
         - name: check-lockfile-intersection
