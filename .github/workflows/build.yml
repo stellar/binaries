@@ -39,6 +39,10 @@ jobs:
           version: '0.11.6'
         - name: cargo-fuzz
           version: '0.12.0'
+        - name: cargo-deny
+          version: '0.14.19'
+        - name: cargo-deny
+          version: '0.16.1'
         - name: cargo-readme
           version: '3.3.1'
         - name: cargo-semver-checks
