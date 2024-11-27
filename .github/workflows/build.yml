@@ -39,6 +39,11 @@ jobs:
           version: '0.11.6'
         - name: cargo-fuzz
           version: '0.12.0'
+        - name: cargo-deny
+          version: '0.14.19'
+          rust: '1.79.0'
+        - name: cargo-deny
+          version: '0.16.1'
         - name: cargo-readme
           version: '3.3.1'
         - name: cargo-semver-checks
@@ -61,8 +66,18 @@ jobs:
     runs-on: ${{ matrix.runs-on }}
     steps:
     - uses: actions/checkout@v3
-    - shell: bash
+    - if: 'matrix.crate.rust'
+      shell: bash
+      run: |
+        rustup install ${{ matrix.crate.rust }}
+        rustup default ${{ matrix.crate.rust }}
+    - if: '!matrix.crate.rust'
+      shell: bash
       run: rustup update
+    - shell: bash
+      run: |
+        rustc -V
+        cargo -V
     - uses: stellar/actions/rust-cache@main
     - shell: bash
       run: cargo install --target-dir ~/.cargo/target --root . --locked --version ${{ matrix.crate.version }} ${{ matrix.crate.name }}
