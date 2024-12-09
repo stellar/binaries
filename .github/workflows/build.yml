@@ -59,7 +59,7 @@ jobs:
         - name: wasm-cs
           version: '1.0.0'
         - name: zizmor
-          version: '0.8.0
+          version: '0.8.0'
         runs-on:
         - ubuntu-latest
         - macos-12 # amd64
