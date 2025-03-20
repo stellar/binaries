@@ -85,7 +85,7 @@ jobs:
       run: cargo install --target-dir ~/.cargo/target --root . --locked --version ${{ matrix.crate.version }} ${{ matrix.crate.name }}
     - shell: bash
       run: tar cvfz ${{ matrix.crate.name }}-${{ matrix.crate.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz -C bin .
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.crate.name }}-${{ matrix.crate.version }}-${{ matrix.runs-on }}
         path: '*.tar.gz'
@@ -113,7 +113,7 @@ jobs:
       run: GOBIN="$PWD/bin" go install ${{ matrix.package.import-path }}@v${{ matrix.package.version }}
     - shell: bash
       run: tar cvfz ${{ matrix.package.name }}-${{ matrix.package.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz -C bin .
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.package.name }}-${{ matrix.package.version }}-${{ matrix.runs-on }}
         path: '*.tar.gz'
@@ -139,7 +139,7 @@ jobs:
     needs: release-create
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
     - run: gh release -R ${{ github.repository }} upload --clobber "${{ needs.release-create.outputs.tag }}" **/*.tar.gz
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
