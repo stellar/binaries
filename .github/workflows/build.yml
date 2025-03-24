@@ -60,6 +60,8 @@ jobs:
           version: '0.1.0'
         - name: wasm-cs
           version: '1.0.0'
+        - name: zizmor
+          version: '0.8.0'
         runs-on:
         - ubuntu-latest
         - ubuntu-22.04-arm
