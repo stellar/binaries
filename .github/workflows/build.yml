@@ -33,20 +33,27 @@ jobs:
           version: '0.3.6'
         - name: cargo-hack
           version: '0.5.28'
+        - name: cargo-hack
+          version: '0.6.35'
         - name: cargo-set-rust-version
           version: '0.5.0'
         - name: cargo-edit
           version: '0.11.6'
         - name: cargo-fuzz
           version: '0.12.0'
+        - name: cargo-deny
+          version: '0.14.19'
+          rust: '1.79.0'
+        - name: cargo-deny
+          version: '0.16.1'
         - name: cargo-readme
           version: '3.3.1'
         - name: cargo-semver-checks
-          version: '0.35.0'
+          version: '0.40.0'
         - name: cargo-public-api
           version: '0.33.1'
         - name: wasm-pack
-          version: '0.12.1'
+          version: '0.13.0'
         - name: wasm-bindgen-cli
           version: '0.2.92'
         - name: check-lockfile-intersection
@@ -55,20 +62,31 @@ jobs:
           version: '1.0.0'
         runs-on:
         - ubuntu-latest
-        - macos-12 # amd64
+        - ubuntu-22.04-arm
+        - macos-13 # x64
         - macos-14 # arm64
         - windows-latest
     runs-on: ${{ matrix.runs-on }}
     steps:
     - uses: actions/checkout@v3
-    - shell: bash
+    - if: 'matrix.crate.rust'
+      shell: bash
+      run: |
+        rustup install ${{ matrix.crate.rust }}
+        rustup default ${{ matrix.crate.rust }}
+    - if: '!matrix.crate.rust'
+      shell: bash
       run: rustup update
+    - shell: bash
+      run: |
+        rustc -V
+        cargo -V
     - uses: stellar/actions/rust-cache@main
     - shell: bash
       run: cargo install --target-dir ~/.cargo/target --root . --locked --version ${{ matrix.crate.version }} ${{ matrix.crate.name }}
     - shell: bash
       run: tar cvfz ${{ matrix.crate.name }}-${{ matrix.crate.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz -C bin .
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.crate.name }}-${{ matrix.crate.version }}-${{ matrix.runs-on }}
         path: '*.tar.gz'
@@ -83,7 +101,7 @@ jobs:
           version: '1.7.1'
         runs-on:
         - ubuntu-latest
-        - macos-12 # amd64
+        - macos-13 # arm64
         - macos-14 # arm64
         - windows-latest
     runs-on: ${{ matrix.runs-on }}
@@ -96,7 +114,7 @@ jobs:
       run: GOBIN="$PWD/bin" go install ${{ matrix.package.import-path }}@v${{ matrix.package.version }}
     - shell: bash
       run: tar cvfz ${{ matrix.package.name }}-${{ matrix.package.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz -C bin .
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.package.name }}-${{ matrix.package.version }}-${{ matrix.runs-on }}
         path: '*.tar.gz'
