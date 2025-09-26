@@ -6,7 +6,6 @@ on:
 jobs:
 
   release-test:
-    needs: release-upload
     strategy:
       matrix:
         crate:
