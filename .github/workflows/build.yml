@@ -71,7 +71,7 @@ jobs:
       run:
         shell: bash
     steps:
-    - run: echo "ASSET_NAME=${{ matrix.package.name }}-${{ matrix.package.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz" >> $GITHUB_ENV
+    - run: echo "ASSET_NAME=${{ matrix.crate.name }}-${{ matrix.crate.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz" >> $GITHUB_ENV
     - name: Check for existing artifact
       id: check
       run: |
