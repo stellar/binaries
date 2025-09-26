@@ -75,8 +75,8 @@ jobs:
     - name: Check for existing artifact
       id: check
       run: |
-        TAG=$(gh release list --limit 1 --json tagName | jq -r '.[0].tagName')
-        if gh release download $TAG --pattern "$ASSET_NAME"; then
+        TAG=$(gh release list -R ${{ github.repository }} --limit 1 --json tagName | jq -r '.[0].tagName')
+        if gh release download -R ${{ github.repository }} $TAG --pattern "$ASSET_NAME"; then
           echo "exists=true" >> $GITHUB_OUTPUT
         else
           echo "exists=false" >> $GITHUB_OUTPUT
@@ -123,8 +123,8 @@ jobs:
     - run: echo "ASSET_NAME=${{ matrix.package.name }}-${{ matrix.package.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz" >> $GITHUB_ENV
     - name: Check for existing artifact
       run: |
-        TAG=$(gh release list --limit 1 --json tagName | jq -r '.[0].tagName')
-        if gh release download $TAG --pattern "$ASSET_NAME"; then
+        TAG=$(gh release list -R ${{ github.repository }} --limit 1 --json tagName | jq -r '.[0].tagName')
+        if gh release download -R ${{ github.repository }} $TAG --pattern "$ASSET_NAME"; then
           echo "exists=true" >> $GITHUB_OUTPUT
         else
           echo "exists=false" >> $GITHUB_OUTPUT
