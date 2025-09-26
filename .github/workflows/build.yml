@@ -144,3 +144,24 @@ jobs:
     - run: gh release -R ${{ github.repository }} upload --clobber "${{ needs.release-create.outputs.tag }}" **/*.tar.gz
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release-test:
+    if: github.ref_name == 'main'
+    needs: release-upload
+    strategy:
+      matrix:
+        runs-on:
+        - ubuntu-latest
+        - macos-latest
+        - windows-latest
+    runs-on: ${{ matrix.runs-on }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - uses: actions/checkout@v5
+    - uses: stellar/binaries@${{ needs.release-create.outputs.tag }}
+      with:
+        name: wasm-cs
+        version: 1.0.0
+    - run: wasm-cs -V
