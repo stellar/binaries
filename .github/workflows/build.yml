@@ -147,7 +147,7 @@ jobs:
 
   release-test:
     if: github.ref_name == 'main'
-    needs: release-upload
+    needs: [release-create, release-upload]
     strategy:
       matrix:
         runs-on:
