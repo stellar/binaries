@@ -87,7 +87,7 @@ jobs:
       run: |
         rustup install ${{ matrix.crate.rust }}
         rustup default ${{ matrix.crate.rust }}
-    - if: steps.check.outputs.exists == 'false' && !matrix.crate.rust'
+    - if: steps.check.outputs.exists == 'false' && !matrix.crate.rust
       run: |
         rustup update
         rustc -V
