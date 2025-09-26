@@ -160,8 +160,9 @@ jobs:
         shell: bash
     steps:
     - uses: actions/checkout@v5
-    - uses: stellar/binaries@${{ needs.release-create.outputs.tag }}
+    - uses: ./action.yml
       with:
         name: wasm-cs
         version: 1.0.0
+        ref: ${{ needs.release-create.outputs.tag }}
     - run: wasm-cs -V
