@@ -70,9 +70,8 @@ jobs:
     defaults:
       run:
         shell: bash
-    env:
-      ASSET_NAME: ${{ matrix.crate.name }}-${{ matrix.crate.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz
     steps:
+    - run: echo "ASSET_NAME=${{ matrix.package.name }}-${{ matrix.package.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz" >> $GITHUB_ENV
     - name: Check for existing artifact
       id: check
       run: |
@@ -120,9 +119,8 @@ jobs:
     defaults:
       run:
         shell: bash
-    env:
-      ASSET_NAME: ${{ matrix.package.name }}-${{ matrix.package.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz
     steps:
+    - run: echo "ASSET_NAME=${{ matrix.package.name }}-${{ matrix.package.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz" >> $GITHUB_ENV
     - name: Check for existing artifact
       run: |
         TAG=$(gh release list --limit 1 --json tagName | jq -r '.[0].tagName')
