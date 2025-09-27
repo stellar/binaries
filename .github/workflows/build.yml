@@ -188,7 +188,7 @@ jobs:
         shell: bash
     steps:
     - uses: actions/checkout@v5
-    - uses: ./action.yml
+    - uses: ./
       with:
         name: wasm-cs
         version: 1.0.0
