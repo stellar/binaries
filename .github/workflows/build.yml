@@ -27,6 +27,8 @@ jobs:
       fail-fast: false
       matrix:
         crate:
+        - name: cargo-expand
+          version: '1.0.116'
         - name: cargo-workspaces
           version: '0.2.35'
         - name: cargo-workspaces
