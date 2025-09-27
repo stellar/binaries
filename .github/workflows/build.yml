@@ -69,25 +69,36 @@ jobs:
         - macos-14 # arm64
         - windows-latest
     runs-on: ${{ matrix.runs-on }}
+    defaults:
+      run:
+        shell: bash
     steps:
-    - uses: actions/checkout@v3
-    - if: 'matrix.crate.rust'
-      shell: bash
+    - run: echo "ASSET_NAME=${{ matrix.crate.name }}-${{ matrix.crate.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz" >> $GITHUB_ENV
+    - name: Check for existing artifact
+      id: check
+      run: |
+        TAG=$(gh release list -R ${{ github.repository }} --limit 1 --json tagName | jq -r '.[0].tagName')
+        if gh release download -R ${{ github.repository }} $TAG --pattern "$ASSET_NAME"; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "exists=false" >> $GITHUB_OUTPUT
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - if: steps.check.outputs.exists == 'false' && matrix.crate.rust
       run: |
         rustup install ${{ matrix.crate.rust }}
         rustup default ${{ matrix.crate.rust }}
-    - if: '!matrix.crate.rust'
-      shell: bash
-      run: rustup update
-    - shell: bash
+    - if: steps.check.outputs.exists == 'false' && !matrix.crate.rust
       run: |
+        rustup update
         rustc -V
-        cargo -V
-    - uses: stellar/actions/rust-cache@main
-    - shell: bash
+    - if: steps.check.outputs.exists == 'false'
+      uses: stellar/actions/rust-cache@main
+    - if: steps.check.outputs.exists == 'false'
       run: cargo install --target-dir ~/.cargo/target --root . --locked --version ${{ matrix.crate.version }} ${{ matrix.crate.name }}
-    - shell: bash
-      run: tar cvfz ${{ matrix.crate.name }}-${{ matrix.crate.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz -C bin .
+    - if: steps.check.outputs.exists == 'false'
+      run: tar cvfz $ASSET_NAME -C bin .
     - uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.crate.name }}-${{ matrix.crate.version }}-${{ matrix.runs-on }}
@@ -107,15 +118,30 @@ jobs:
         - macos-14 # arm64
         - windows-latest
     runs-on: ${{ matrix.runs-on }}
+    defaults:
+      run:
+        shell: bash
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-go@v5
+    - run: echo "ASSET_NAME=${{ matrix.package.name }}-${{ matrix.package.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz" >> $GITHUB_ENV
+    - name: Check for existing artifact
+      run: |
+        TAG=$(gh release list -R ${{ github.repository }} --limit 1 --json tagName | jq -r '.[0].tagName')
+        if gh release download -R ${{ github.repository }} $TAG --pattern "$ASSET_NAME"; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "exists=false" >> $GITHUB_OUTPUT
+        fi
+      id: check
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - if: steps.check.outputs.exists == 'false'
+      uses: actions/setup-go@v5
       with:
         go-version: stable
-    - shell: bash
+    - if: steps.check.outputs.exists == 'false'
       run: GOBIN="$PWD/bin" go install ${{ matrix.package.import-path }}@v${{ matrix.package.version }}
-    - shell: bash
-      run: tar cvfz ${{ matrix.package.name }}-${{ matrix.package.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz -C bin .
+    - if: steps.check.outputs.exists == 'false'
+      run: tar cvfz $ASSET_NAME -C bin .
     - uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.package.name }}-${{ matrix.package.version }}-${{ matrix.runs-on }}
