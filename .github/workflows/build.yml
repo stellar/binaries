@@ -63,11 +63,11 @@ jobs:
         - name: wasm-cs
           version: '1.0.0'
         runs-on:
-        - ubuntu-latest
-        - ubuntu-22.04-arm
-        - macos-13 # x64
-        - macos-14 # arm64
-        - windows-latest
+        - ubuntu-latest # amd64
+        - ubuntu-22.04-arm # arm64
+        - macos-15-intel # amd64
+        - macos-latest # arm64
+        - windows-latest # amd64
     runs-on: ${{ matrix.runs-on }}
     defaults:
       run:
@@ -113,10 +113,11 @@ jobs:
           import-path: github.com/rhysd/actionlint/cmd/actionlint
           version: '1.7.1'
         runs-on:
-        - ubuntu-latest
-        - macos-13 # arm64
-        - macos-14 # arm64
-        - windows-latest
+        - ubuntu-latest # amd64
+        - ubuntu-22.04-arm # arm64
+        - macos-15-intel # amd64
+        - macos-latest # arm64
+        - windows-latest # amd64
     runs-on: ${{ matrix.runs-on }}
     defaults:
       run:
@@ -179,9 +180,11 @@ jobs:
     strategy:
       matrix:
         runs-on:
-        - ubuntu-latest
-        - macos-latest
-        - windows-latest
+        - ubuntu-latest # amd64
+        - ubuntu-22.04-arm # arm64
+        - macos-15-intel # amd64
+        - macos-latest # arm64
+        - windows-latest # amd64
     runs-on: ${{ matrix.runs-on }}
     defaults:
       run:
