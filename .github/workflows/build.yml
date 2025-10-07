@@ -54,6 +54,8 @@ jobs:
           version: '0.44.0'
         - name: cargo-public-api
           version: '0.33.1'
+        - name: cargo-nextest
+          version: 'v0.9.105'
         - name: wasm-pack
           version: '0.13.0'
         - name: wasm-bindgen-cli
