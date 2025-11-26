@@ -48,6 +48,10 @@ jobs:
           rust: '1.79.0'
         - name: cargo-deny
           version: '0.16.1'
+        - name: cargo-cache
+          version: '0.8.3'
+        - name: cargo-sweep
+          version: '0.7.0'
         - name: cargo-readme
           version: '3.3.1'
         - name: cargo-semver-checks
