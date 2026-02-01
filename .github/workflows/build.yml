@@ -105,7 +105,7 @@ jobs:
       run: cargo install --target-dir ~/.cargo/target --root . --locked --version ${{ matrix.crate.version }} ${{ matrix.crate.name }}
     - if: steps.check.outputs.exists == 'false'
       run: tar cvfz $ASSET_NAME -C bin .
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v6
       with:
         name: ${{ matrix.crate.name }}-${{ matrix.crate.version }}-${{ matrix.runs-on }}
         path: '*.tar.gz'
@@ -142,14 +142,14 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - if: steps.check.outputs.exists == 'false'
-      uses: actions/setup-go@v5
+      uses: actions/setup-go@v6
       with:
         go-version: stable
     - if: steps.check.outputs.exists == 'false'
       run: GOBIN="$PWD/bin" go install ${{ matrix.package.import-path }}@v${{ matrix.package.version }}
     - if: steps.check.outputs.exists == 'false'
       run: tar cvfz $ASSET_NAME -C bin .
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v6
       with:
         name: ${{ matrix.package.name }}-${{ matrix.package.version }}-${{ matrix.runs-on }}
         path: '*.tar.gz'
@@ -159,7 +159,7 @@ jobs:
     needs: complete
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 0
     - id: set-tag
@@ -175,7 +175,7 @@ jobs:
     needs: release-create
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/download-artifact@v4
+    - uses: actions/download-artifact@v7
     - run: gh release -R ${{ github.repository }} upload --clobber "${{ needs.release-create.outputs.tag }}" **/*.tar.gz
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -196,7 +196,7 @@ jobs:
       run:
         shell: bash
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - uses: ./
       with:
         name: wasm-cs
