@@ -1,0 +1,29 @@
+{
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: ['config:recommended'],
+
+  // Hold every update until the release is at least 7 days old, and always
+  // target the newest version that passes that age check rather than the
+  // absolute latest (so we never jump onto a brand-new release).
+  minimumReleaseAge: '7 days',
+  internalChecksFilter: 'strict',
+
+  customManagers: [
+    {
+      // cargo tools installed via `cargo install` in the build matrix.
+      customType: 'regex',
+      managerFilePatterns: ['/^\\.github/workflows/build\\.yml$/'],
+      matchStrings: ["name: (?<depName>[\\w-]+)\\s+version: '(?<currentValue>[^']+)'"],
+      datasourceTemplate: 'crate',
+    },
+    {
+      // go tools installed via `go install` in the build matrix. The version is
+      // stored without a leading `v`, so strip it from the upstream tag.
+      customType: 'regex',
+      managerFilePatterns: ['/^\\.github/workflows/build\\.yml$/'],
+      matchStrings: ["import-path: (?<depName>github\\.com/[^/\\s]+/[^/\\s]+)[^\\n]*\\s+version: '(?<currentValue>[^']+)'"],
+      datasourceTemplate: 'go',
+      extractVersionTemplate: '^v?(?<version>.+)$',
+    },
+  ],
+}

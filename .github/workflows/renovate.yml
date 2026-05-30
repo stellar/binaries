@@ -1,0 +1,23 @@
+name: Renovate
+
+on:
+  schedule:
+  - cron: '0 6 * * *' # daily, 06:00 UTC
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+
+  renovate:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+    - uses: renovatebot/github-action@693b9ef15eec82123529a37c782242f091365961 #v46.1.14
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
