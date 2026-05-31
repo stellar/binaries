@@ -28,6 +28,10 @@ jobs:
         # Operate on the branch that triggered the run (the PR's source branch
         # on pull_request, otherwise the branch the workflow ran on).
         RENOVATE_BASE_BRANCH_PATTERNS: '["${{ github.head_ref || github.ref_name }}"]'
+        # Read the config from that branch rather than only the default branch.
+        RENOVATE_USE_BASE_BRANCH_CONFIG: merge
+        # Don't disable the repo when the default branch has no config yet.
+        RENOVATE_REQUIRE_CONFIG: optional
         # Config is committed in-repo, so never run the onboarding PR flow.
         RENOVATE_ONBOARDING: 'false'
         # Dry run on pull requests.
