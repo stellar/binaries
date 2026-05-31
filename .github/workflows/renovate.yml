@@ -20,19 +20,24 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+    # Check out so the branch's renovate.json5 is on disk and can be passed to
+    # Renovate directly, instead of Renovate fetching repo config from the
+    # default branch.
+    - uses: actions/checkout@v5
     - uses: renovatebot/github-action@693b9ef15eec82123529a37c782242f091365961 #v46.1.14
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
+        # Use the checked-out config (the branch being run on) as Renovate's
+        # config, mounted into the container — no config needed on the default
+        # branch.
+        configurationFile: renovate.json5
       env:
         RENOVATE_REPOSITORIES: ${{ github.repository }}
         # Operate on the branch that triggered the run (the PR's source branch
         # on pull_request, otherwise the branch the workflow ran on).
         RENOVATE_BASE_BRANCH_PATTERNS: '["${{ github.head_ref || github.ref_name }}"]'
-        # Read the config from that branch rather than only the default branch.
-        RENOVATE_USE_BASE_BRANCH_CONFIG: merge
-        # Don't disable the repo when the default branch has no config yet.
+        # Don't require a config on the default branch, and never onboard.
         RENOVATE_REQUIRE_CONFIG: optional
-        # Config is committed in-repo, so never run the onboarding PR flow.
         RENOVATE_ONBOARDING: 'false'
         # Dry run on pull requests.
         RENOVATE_DRY_RUN: ${{ github.event_name == 'pull_request' && 'full' || '' }}
