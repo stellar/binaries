@@ -20,9 +20,6 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-    # Check out so the branch's renovate.json5 is on disk and can be passed to
-    # Renovate directly, instead of Renovate fetching repo config from the
-    # default branch.
     - uses: actions/checkout@v5
     - uses: renovatebot/github-action@693b9ef15eec82123529a37c782242f091365961 #v46.1.14
       with:
