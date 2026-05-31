@@ -7,7 +7,7 @@ on:
   pull_request:
 
 concurrency:
-  group: ${{ github.workflow }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 permissions: {}
@@ -17,6 +17,7 @@ jobs:
   renovate:
     runs-on: ubuntu-latest
     permissions:
+      contents: write
       pull-requests: write
     steps:
     - uses: renovatebot/github-action@693b9ef15eec82123529a37c782242f091365961 #v46.1.14
@@ -24,5 +25,11 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
       env:
         RENOVATE_REPOSITORIES: ${{ github.repository }}
-        RENOVATE_DRY_RUN: ${{ inputs.dryRun }}
-        LOG_LEVEL: ${{ inputs.dryRun && 'debug' || 'info' }}
+        # Operate on the branch that triggered the run (the PR's source branch
+        # on pull_request, otherwise the branch the workflow ran on).
+        RENOVATE_BASE_BRANCH_PATTERNS: '["${{ github.head_ref || github.ref_name }}"]'
+        # Config is committed in-repo, so never run the onboarding PR flow.
+        RENOVATE_ONBOARDING: 'false'
+        # Dry run on pull requests.
+        RENOVATE_DRY_RUN: ${{ github.event_name == 'pull_request' && 'full' || '' }}
+        LOG_LEVEL: ${{ github.event_name == 'pull_request' && 'debug' || 'info' }}
