@@ -16,58 +16,30 @@ jobs:
 
   complete:
     if: always()
-    needs: [cargo, go]
+    needs: [prepare, cargo, go]
     runs-on: ubuntu-latest
     steps:
     - if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
       run: exit 1
 
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      cargo: ${{ steps.matrix.outputs.cargo }}
+      go: ${{ steps.matrix.outputs.go }}
+    steps:
+    - uses: actions/checkout@v5
+    - id: matrix
+      run: |
+        echo "cargo=$(jq -c '.cargo' tools/tools.json)" >> "$GITHUB_OUTPUT"
+        echo "go=$(jq -c '.go' tools/tools.json)" >> "$GITHUB_OUTPUT"
+
   cargo:
+    needs: prepare
     strategy:
       fail-fast: false
       matrix:
-        crate:
-        - name: cargo-expand
-          version: '1.0.116'
-        - name: cargo-workspaces
-          version: '0.2.35'
-        - name: cargo-workspaces
-          version: '0.3.6'
-        - name: cargo-hack
-          version: '0.6.44'
-        - name: cargo-set-rust-version
-          version: '0.5.0'
-        - name: cargo-edit
-          version: '0.11.6'
-        - name: cargo-fuzz
-          version: '0.13.1'
-        - name: cargo-deny
-          version: '0.14.19'
-          rust: '1.79.0'
-        - name: cargo-deny
-          version: '0.19.0'
-        - name: cargo-cache
-          version: '0.8.3'
-        - name: cargo-sweep
-          version: '0.7.0'
-        - name: cargo-readme
-          version: '3.3.1'
-        - name: cargo-semver-checks
-          version: '0.46.0'
-        - name: cargo-public-api
-          version: '0.33.1'
-        - name: cargo-nextest
-          version: '0.9.105'
-        - name: wasm-pack
-          version: '0.13.0'
-        - name: wasm-bindgen-cli
-          version: '0.2.92'
-        - name: check-lockfile-intersection
-          version: '0.1.0'
-        - name: wasm-cs
-          version: '1.0.0'
-        - name: sccache
-          version: '0.14.0'
+        crate: ${{ fromJSON(needs.prepare.outputs.cargo) }}
         runs-on:
         - ubuntu-latest # amd64
         - ubuntu-22.04-arm # arm64
@@ -111,13 +83,11 @@ jobs:
         path: '*.tar.gz'
 
   go:
+    needs: prepare
     strategy:
       fail-fast: false
       matrix:
-        package:
-        - name: actionlint
-          import-path: github.com/rhysd/actionlint/cmd/actionlint
-          version: '1.7.1'
+        package: ${{ fromJSON(needs.prepare.outputs.go) }}
         runs-on:
         - ubuntu-latest # amd64
         - ubuntu-22.04-arm # arm64
