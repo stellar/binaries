@@ -1,5 +1,5 @@
 {
-  "$comment": "Tool versions built and released by .github/workflows/build.yml. Renovate keeps `version` current (cargo -> crates.io, go -> Go proxy). Add \"auto-update\": false to freeze a row (e.g. a compatibility version kept alongside a newer one). The build matrix is generated straight from this file.",
+  "$comment": "Cargo tools built and released by .github/workflows/build.yml via `cargo install`. Renovate keeps `version` current (crates.io). Add \"auto-update\": false to freeze a row (e.g. a compatibility version kept alongside a newer one). The build matrix is generated straight from this file.",
   "cargo": [
     { "name": "cargo-expand", "version": "1.0.116" },
     { "name": "cargo-workspaces", "version": "0.2.35", "auto-update": false },
@@ -21,8 +21,5 @@
     { "name": "check-lockfile-intersection", "version": "0.1.0" },
     { "name": "wasm-cs", "version": "1.0.0" },
     { "name": "sccache", "version": "0.14.0" }
-  ],
-  "go": [
-    { "name": "actionlint", "import-path": "github.com/rhysd/actionlint/cmd/actionlint", "version": "1.7.1" }
   ]
 }
