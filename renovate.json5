@@ -7,10 +7,10 @@
   // manager off to avoid the two bots fighting.
   enabledManagers: ['custom.jsonata'],
 
-  // Hold every update until the release is at least 7 days old, and always
+  // Hold every update until the release is at least 1 month old, and always
   // target the newest version that passes that age check rather than the
   // absolute latest (so we never jump onto a brand-new release).
-  minimumReleaseAge: '7 days',
+  minimumReleaseAge: '1 month',
   internalChecksFilter: 'strict',
 
   customManagers: [
