@@ -1,6 +1,3 @@
-{
-  "$comment": "Go tools built and released by .github/workflows/build.yml via `go install`. Renovate keeps `version` current (Go proxy). Add \"auto-update\": false to freeze a row. The build matrix is generated straight from this file.",
-  "go": [
-    { "name": "actionlint", "import-path": "github.com/rhysd/actionlint/cmd/actionlint", "version": "1.7.1" }
-  ]
-}
+[
+  { "name": "actionlint", "import-path": "github.com/rhysd/actionlint/cmd/actionlint", "version": "1.7.1" }
+]

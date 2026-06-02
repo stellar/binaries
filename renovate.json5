@@ -22,7 +22,7 @@
       fileFormat: 'json',
       managerFilePatterns: ['/^tools-cargo\\.json$/'],
       matchStrings: [
-        'cargo.{ "depName": name, "currentValue": version, "depType": $string(`auto-update`) }',
+        '$.{ "depName": name, "currentValue": version, "depType": $string(`auto-update`) }',
       ],
       datasourceTemplate: 'crate',
     },
@@ -33,7 +33,7 @@
       fileFormat: 'json',
       managerFilePatterns: ['/^tools-go\\.json$/'],
       matchStrings: [
-        'go.{ "depName": $join($split(`import-path`, "/")[[0..2]], "/"), "currentValue": version, "depType": $string(`auto-update`) }',
+        '$.{ "depName": $join($split(`import-path`, "/")[[0..2]], "/"), "currentValue": version, "depType": $string(`auto-update`) }',
       ],
       datasourceTemplate: 'go',
       extractVersionTemplate: '^v?(?<version>.+)$',
