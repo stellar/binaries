@@ -11,6 +11,8 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions: {}
+
 jobs:
 
   complete:
@@ -23,6 +25,8 @@ jobs:
 
   prepare:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       cargo: ${{ steps.matrix.outputs.cargo }}
       go: ${{ steps.matrix.outputs.go }}
@@ -131,6 +135,8 @@ jobs:
     if: github.ref_name == 'main'
     needs: complete
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
     - uses: actions/checkout@v6
       with:
@@ -147,6 +153,8 @@ jobs:
     if: github.ref_name == 'main'
     needs: release-create
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
     - uses: actions/download-artifact@v8
     - run: gh release -R ${{ github.repository }} upload --clobber "${{ needs.release-create.outputs.tag }}" **/*.tar.gz
@@ -156,6 +164,8 @@ jobs:
   release-test:
     if: github.ref_name == 'main'
     needs: [release-create, release-upload]
+    permissions:
+      contents: read
     strategy:
       matrix:
         runs-on:
