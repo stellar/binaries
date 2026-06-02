@@ -1,0 +1,52 @@
+{
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: ['config:recommended'],
+
+  // Only manage the tool versions in tools/tools.json. Action `uses:` pins are
+  // handled by Dependabot (.github/dependabot.yml), so leave every other
+  // manager off to avoid the two bots fighting.
+  enabledManagers: ['custom.jsonata'],
+
+  // Hold every update until the release is at least 1 month old, and always
+  // target the newest version that passes that age check rather than the
+  // absolute latest (so we never jump onto a brand-new release).
+  minimumReleaseAge: '1 month',
+  internalChecksFilter: 'strict',
+
+  customManagers: [
+    {
+      // cargo tools built via `cargo install`. Parsed as structured JSON, so an
+      // optional `auto-update` flag anywhere in the entry is captured as the
+      // depType (see packageRules below) regardless of field order.
+      customType: 'jsonata',
+      fileFormat: 'json',
+      managerFilePatterns: ['/^tools-cargo\\.json$/'],
+      matchStrings: [
+        '$.{ "depName": name, "currentValue": version, "depType": $string(`auto-update`) }',
+      ],
+      datasourceTemplate: 'crate',
+    },
+    {
+      // go tools built via `go install`. depName is the module root (first three
+      // path segments of import-path); version is stored without a leading `v`.
+      customType: 'jsonata',
+      fileFormat: 'json',
+      managerFilePatterns: ['/^tools-go\\.json$/'],
+      matchStrings: [
+        '$.{ "depName": $join($split(`import-path`, "/")[[0..2]], "/"), "currentValue": version, "depType": $string(`auto-update`) }',
+      ],
+      datasourceTemplate: 'go',
+      extractVersionTemplate: '^v?(?<version>.+)$',
+    },
+  ],
+
+  packageRules: [
+    {
+      // Freeze a tool by setting "auto-update": false on its entry in
+      // tools/tools.json; that flag is captured as the depType above and
+      // disabled here, so Renovate never proposes updates for it.
+      matchDepTypes: ['false'],
+      enabled: false,
+    },
+  ],
+}
