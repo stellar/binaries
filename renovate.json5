@@ -14,7 +14,8 @@
   internalChecksFilter: 'strict',
 
   // Disable separation of minor and patch versions; group all updates into
-  // a single PR that jumps straight to the latest version.
+  // a single PR that jumps to the newest qualifying version (subject to
+  // minimumReleaseAge above) rather than creating separate PRs per minor version.
   separateMinorPatch: false,
 
   // Disable Renovate's vulnerability-alert lookups; this repo doesn't use them
