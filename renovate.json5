@@ -13,6 +13,10 @@
   minimumReleaseAge: '1 month',
   internalChecksFilter: 'strict',
 
+  // Disable the Dependency Dashboard issue so Renovate doesn't need
+  // `issues: write` permission in the workflow.
+  dependencyDashboard: false,
+
   customManagers: [
     {
       // cargo tools built via `cargo install`. Parsed as structured JSON, so an
