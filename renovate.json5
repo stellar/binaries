@@ -13,6 +13,12 @@
   minimumReleaseAge: '1 month',
   internalChecksFilter: 'strict',
 
+  // Disable Renovate's vulnerability-alert lookups; this repo doesn't use them
+  // (avoids the "Cannot access vulnerability alerts" warning in CI).
+  vulnerabilityAlerts: {
+    enabled: false,
+  },
+
   // Disable the Dependency Dashboard issue so Renovate doesn't need
   // `issues: write` permission in the workflow.
   dependencyDashboard: false,
