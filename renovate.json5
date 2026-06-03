@@ -13,9 +13,10 @@
   minimumReleaseAge: '1 month',
   internalChecksFilter: 'strict',
 
-  // Disable separation of minor and patch updates for the same dependency,
+  // Disable separation of major/minor/patch updates for the same dependency,
   // so updates jump directly to the newest qualifying version rather than
-  // creating separate PRs for each intermediate minor/patch release.
+  // creating separate PRs for each version type.
+  separateMajorMinor: false,
   separateMinorPatch: false,
 
   // Disable Renovate's vulnerability-alert lookups; this repo doesn't use them
