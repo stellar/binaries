@@ -35,6 +35,6 @@ runs:
       ref="${{ inputs.ref || env.REF }}"
       url="https://github.com/stellar/binaries/releases/download/$ref/$file"
       temp_file="$RUNNER_TEMP/$(basename "$file")"
-      curl --retry 5 --retry-delay 2 -fL -o "$temp_file" "$url"
+      curl --retry 5 --retry-all-errors --retry-delay 2 -fL -o "$temp_file" "$url"
       tar xvz -C "$INSTALL_PATH" -f "$temp_file"
       rm -f "$temp_file"
