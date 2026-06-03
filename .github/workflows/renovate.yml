@@ -19,6 +19,8 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      statuses: write
+      checks: read
     steps:
     - uses: actions/checkout@v5
     - uses: renovatebot/github-action@693b9ef15eec82123529a37c782242f091365961 #v46.1.14
