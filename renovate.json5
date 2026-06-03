@@ -13,6 +13,10 @@
   minimumReleaseAge: '1 month',
   internalChecksFilter: 'strict',
 
+  // Disable separation of minor and patch versions; group all updates into
+  // a single PR that jumps straight to the latest version.
+  separateMinorPatch: false,
+
   // Disable Renovate's vulnerability-alert lookups; this repo doesn't use them
   // (avoids the "Cannot access vulnerability alerts" warning in CI).
   vulnerabilityAlerts: {
