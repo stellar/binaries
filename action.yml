@@ -33,4 +33,8 @@ runs:
     run: |
       file="${{ inputs.name }}-${{ inputs.version }}-${{ runner.os }}-${{ runner.arch }}.tar.gz"
       ref="${{ inputs.ref || env.REF }}"
-      curl -fL https://github.com/stellar/binaries/releases/download/$ref/$file | tar xvz -C $INSTALL_PATH
+      url="https://github.com/stellar/binaries/releases/download/$ref/$file"
+      temp_file="$RUNNER_TEMP/$(basename "$file")"
+      curl --retry 5 --retry-all-errors --retry-delay 2 -fL -o "$temp_file" "$url"
+      tar xvz -C "$INSTALL_PATH" -f "$temp_file"
+      rm -f "$temp_file"
