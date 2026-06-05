@@ -58,6 +58,18 @@
 
   packageRules: [
     {
+      // The `crate` datasource defaults to Renovate's `cargo` versioning,
+      // which reads a bare value like "0.3.6" as a Cargo caret *requirement*
+      // (>=0.3.6, <0.4.0) rather than an exact pin. When the newest version
+      // falls outside that range, Renovate writes back the floor of the new
+      // range (e.g. "0.4.0") instead of the exact newest version it resolved
+      // (e.g. "0.4.2"). These entries are exact tool pins, so force `semver`
+      // versioning to make Renovate write the exact newest qualifying version.
+      // (`versioning` is disallowed on customManagers, so it lives here.)
+      matchDatasources: ['crate'],
+      versioning: 'semver',
+    },
+    {
       // Freeze a tool by setting "auto-update": false on its entry in
       // tools/tools.json; that flag is captured as the depType above and
       // disabled here, so Renovate never proposes updates for it.
