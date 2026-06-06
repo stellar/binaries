@@ -18,5 +18,5 @@
   { "name": "wasm-bindgen-cli", "version": "0.2.92" },
   { "name": "check-lockfile-intersection", "version": "0.1.0" },
   { "name": "wasm-cs", "version": "1.0.0", "auto-update": false },
-  { "name": "sccache", "version": "0.14.0" }
+  { "name": "sccache", "version": "0.15.0" }
 ]
