@@ -1,5 +1,5 @@
 [
-  { "name": "cargo-expand", "version": "1.0.116" },
+  { "name": "cargo-expand", "version": "1.0.121" },
   { "name": "cargo-workspaces", "version": "0.2.35", "auto-update": false },
   { "name": "cargo-workspaces", "version": "0.3.6" },
   { "name": "cargo-hack", "version": "0.6.44" },
