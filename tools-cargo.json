@@ -10,7 +10,7 @@
   { "name": "cargo-deny", "version": "0.19.4" },
   { "name": "cargo-cache", "version": "0.8.3" },
   { "name": "cargo-sweep", "version": "0.8.0" },
-  { "name": "cargo-readme", "version": "3.3.1" },
+  { "name": "cargo-readme", "version": "3.3.2" },
   { "name": "cargo-semver-checks", "version": "0.47.0" },
   { "name": "cargo-public-api", "version": "0.51.0" },
   { "name": "cargo-nextest", "version": "0.9.105" },
