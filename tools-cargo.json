@@ -15,7 +15,7 @@
   { "name": "cargo-public-api", "version": "0.51.0" },
   { "name": "cargo-nextest", "version": "0.9.133" },
   { "name": "wasm-pack", "version": "0.14.0" },
-  { "name": "wasm-bindgen-cli", "version": "0.2.92" },
+  { "name": "wasm-bindgen-cli", "version": "0.2.121" },
   { "name": "check-lockfile-intersection", "version": "0.1.0" },
   { "name": "wasm-cs", "version": "1.0.0", "auto-update": false },
   { "name": "sccache", "version": "0.15.0" }
