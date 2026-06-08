@@ -31,7 +31,7 @@ jobs:
       cargo: ${{ steps.matrix.outputs.cargo }}
       go: ${{ steps.matrix.outputs.go }}
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - id: matrix
       run: |
         echo "cargo=$(jq -c '.' tools-cargo.json)" >> "$GITHUB_OUTPUT"
