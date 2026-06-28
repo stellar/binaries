@@ -31,7 +31,7 @@ jobs:
       cargo: ${{ steps.matrix.outputs.cargo }}
       go: ${{ steps.matrix.outputs.go }}
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - id: matrix
       run: |
         echo "cargo=$(jq -c '.' tools-cargo.json)" >> "$GITHUB_OUTPUT"
@@ -138,7 +138,7 @@ jobs:
     permissions:
       contents: write
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         fetch-depth: 0
     - id: set-tag
@@ -179,7 +179,7 @@ jobs:
       run:
         shell: bash
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - uses: ./
       with:
         name: wasm-cs
