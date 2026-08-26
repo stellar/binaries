@@ -35,8 +35,10 @@ jobs:
     - uses: actions/checkout@v6
     - id: matrix
       run: |
-        echo "cargo=$(jq -c '.' tools-cargo.json)" >> "$GITHUB_OUTPUT"
-        echo "cargo-exclude=$(jq -c '[.[] | select(has("exclude")) | . as $crate | .exclude[] | {crate: $crate} + .]' tools-cargo.json)" >> "$GITHUB_OUTPUT"
+        # The exclude field is dropped from the crate itself, because every
+        # field of it appears in the job name.
+        echo "cargo=$(jq -c '[.[] | del(.exclude)]' tools-cargo.json)" >> "$GITHUB_OUTPUT"
+        echo "cargo-exclude=$(jq -c '[.[] | select(has("exclude")) | del(.exclude) as $crate | .exclude[] | {crate: $crate} + .]' tools-cargo.json)" >> "$GITHUB_OUTPUT"
         echo "go=$(jq -c '.' tools-go.json)" >> "$GITHUB_OUTPUT"
 
   cargo:
