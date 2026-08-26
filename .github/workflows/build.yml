@@ -29,16 +29,29 @@ jobs:
       contents: read
     outputs:
       cargo: ${{ steps.matrix.outputs.cargo }}
-      cargo-exclude: ${{ steps.matrix.outputs.cargo-exclude }}
       go: ${{ steps.matrix.outputs.go }}
     steps:
     - uses: actions/checkout@v6
     - id: matrix
       run: |
-        # The exclude field is dropped from the crate itself, because every
-        # field of it appears in the job name.
-        echo "cargo=$(jq -c '[.[] | del(.exclude)]' tools-cargo.json)" >> "$GITHUB_OUTPUT"
-        echo "cargo-exclude=$(jq -c '[.[] | select(has("exclude")) | del(.exclude) as $crate | .exclude[] | {crate: $crate} + .]' tools-cargo.json)" >> "$GITHUB_OUTPUT"
+        echo "cargo=$(jq -c '
+          # Only the fields the build uses, because every field of a crate
+          # appears in the job name. Fields absent from the entry are dropped.
+          def crate: {name, version, rust, "auto-update"}
+            | with_entries(select(.value != null));
+          {
+            crate: [.[] | crate],
+            "runs-on": [
+              "ubuntu-latest",     # amd64
+              "ubuntu-22.04-arm",  # arm64
+              "macos-15-intel",    # amd64
+              "macos-latest",      # arm64
+              "windows-latest"     # amd64
+            ],
+            # The optional exclude field of a crate, for tools that do not
+            # support every platform.
+            exclude: [.[] | select(has("exclude")) | crate as $crate | .exclude[] | {crate: $crate} + .]
+          }' tools-cargo.json)" >> "$GITHUB_OUTPUT"
         echo "go=$(jq -c '.' tools-go.json)" >> "$GITHUB_OUTPUT"
 
   cargo:
@@ -47,17 +60,7 @@ jobs:
       contents: read
     strategy:
       fail-fast: false
-      matrix:
-        crate: ${{ fromJSON(needs.prepare.outputs.cargo) }}
-        runs-on:
-        - ubuntu-latest # amd64
-        - ubuntu-22.04-arm # arm64
-        - macos-15-intel # amd64
-        - macos-latest # arm64
-        - windows-latest # amd64
-        # Built from the optional exclude field of a tools-cargo.json entry,
-        # for tools that do not support every platform.
-        exclude: ${{ fromJSON(needs.prepare.outputs.cargo-exclude) }}
+      matrix: ${{ fromJSON(needs.prepare.outputs.cargo) }}
     runs-on: ${{ matrix.runs-on }}
     defaults:
       run:
