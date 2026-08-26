@@ -52,9 +52,8 @@ jobs:
         - macos-latest # arm64
         - windows-latest # amd64
         exclude:
-        # cargo-afl does not build on Windows, where it depends on the
-        # unix-only xdg crate.
-        - crate: { name: cargo-afl, version: 0.18.2 }
+        # cargo-afl does not build on Windows.
+        - crate: { name: cargo-afl }
           runs-on: windows-latest
     runs-on: ${{ matrix.runs-on }}
     defaults:
