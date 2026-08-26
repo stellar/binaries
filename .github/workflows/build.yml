@@ -29,12 +29,14 @@ jobs:
       contents: read
     outputs:
       cargo: ${{ steps.matrix.outputs.cargo }}
+      cargo-exclude: ${{ steps.matrix.outputs.cargo-exclude }}
       go: ${{ steps.matrix.outputs.go }}
     steps:
     - uses: actions/checkout@v6
     - id: matrix
       run: |
         echo "cargo=$(jq -c '.' tools-cargo.json)" >> "$GITHUB_OUTPUT"
+        echo "cargo-exclude=$(jq -c '[.[] | select(has("exclude-runs-on")) | {crate: ., "runs-on": ."exclude-runs-on"[]}]' tools-cargo.json)" >> "$GITHUB_OUTPUT"
         echo "go=$(jq -c '.' tools-go.json)" >> "$GITHUB_OUTPUT"
 
   cargo:
@@ -51,6 +53,9 @@ jobs:
         - macos-15-intel # amd64
         - macos-latest # arm64
         - windows-latest # amd64
+        # Built from the optional exclude-runs-on field of a tools-cargo.json
+        # entry, for tools that do not support every platform.
+        exclude: ${{ fromJSON(needs.prepare.outputs.cargo-exclude) }}
     runs-on: ${{ matrix.runs-on }}
     defaults:
       run:
