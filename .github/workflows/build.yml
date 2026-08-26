@@ -34,24 +34,7 @@ jobs:
     - uses: actions/checkout@v6
     - id: matrix
       run: |
-        echo "cargo=$(jq -c '
-          # Only the fields the build uses, because every field of a crate
-          # appears in the job name. Fields absent from the entry are dropped.
-          def crate: {name, version, rust, "auto-update"}
-            | with_entries(select(.value != null));
-          {
-            crate: [.[] | crate],
-            "runs-on": [
-              "ubuntu-latest",     # amd64
-              "ubuntu-22.04-arm",  # arm64
-              "macos-15-intel",    # amd64
-              "macos-latest",      # arm64
-              "windows-latest"     # amd64
-            ],
-            # The optional exclude field of a crate, for tools that do not
-            # support every platform.
-            exclude: [.[] | select(has("exclude")) | crate as $crate | .exclude[] | {crate: $crate} + .]
-          }' tools-cargo.json)" >> "$GITHUB_OUTPUT"
+        echo "cargo=$(jq -c '.' tools-cargo.json)" >> "$GITHUB_OUTPUT"
         echo "go=$(jq -c '.' tools-go.json)" >> "$GITHUB_OUTPUT"
 
   cargo:
@@ -60,7 +43,19 @@ jobs:
       contents: read
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.prepare.outputs.cargo) }}
+      matrix:
+        crate: ${{ fromJSON(needs.prepare.outputs.cargo) }}
+        runs-on:
+        - ubuntu-latest # amd64
+        - ubuntu-22.04-arm # arm64
+        - macos-15-intel # amd64
+        - macos-latest # arm64
+        - windows-latest # amd64
+        exclude:
+        # cargo-afl does not build on Windows, where it depends on the
+        # unix-only xdg crate.
+        - crate: { name: cargo-afl, version: 0.18.2 }
+          runs-on: windows-latest
     runs-on: ${{ matrix.runs-on }}
     defaults:
       run:
