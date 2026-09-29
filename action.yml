@@ -36,5 +36,8 @@ runs:
       url="https://github.com/stellar/binaries/releases/download/$ref/$file"
       temp_file="$RUNNER_TEMP/$(basename "$file")"
       curl --retry 5 --retry-all-errors --retry-delay 2 -fL -o "$temp_file" "$url"
-      tar xvz -C "$INSTALL_PATH" -f "$temp_file"
+      # On Windows RUNNER_TEMP is a path like D:\a\_temp, which GNU tar reads
+      # as a file on a remote host named D unless given --force-local. BSD tar,
+      # used on macOS, rejects the option.
+      tar xvz -C "$INSTALL_PATH" -f "$temp_file" ${{ runner.os == 'Windows' && '--force-local' || '' }}
       rm -f "$temp_file"

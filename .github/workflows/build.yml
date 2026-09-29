@@ -17,7 +17,7 @@ jobs:
 
   complete:
     if: always()
-    needs: [prepare, cargo, go]
+    needs: [prepare, cargo, go, action-test]
     runs-on: ubuntu-latest
     steps:
     - if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
@@ -130,6 +130,41 @@ jobs:
       with:
         name: ${{ matrix.package.name }}-${{ matrix.package.version }}-${{ matrix.runs-on }}
         path: '*.tar.gz'
+
+  # Test the action from the branch under test before it merges, installing a
+  # binary from the latest release, because release-test only runs on main
+  # after a release.
+  action-test:
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        runs-on:
+        - ubuntu-latest # amd64
+        - ubuntu-22.04-arm # arm64
+        - macos-15-intel # amd64
+        - macos-latest # arm64
+        - windows-latest # amd64
+    runs-on: ${{ matrix.runs-on }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - uses: actions/checkout@v6
+    - id: release
+      run: |
+        TAG=$(gh release list -R ${{ github.repository }} --limit 1 --json tagName | jq -r '.[0].tagName')
+        echo "tag=$TAG" >> $GITHUB_OUTPUT
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: ./
+      with:
+        name: wasm-cs
+        version: 1.0.0
+        ref: ${{ steps.release.outputs.tag }}
+    - run: wasm-cs -V
 
   release-create:
     if: github.ref_name == 'main'
