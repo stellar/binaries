@@ -167,7 +167,7 @@ jobs:
 
   release-create:
     if: github.ref_name == 'main'
-    needs: complete
+    needs: [prepare, cargo, go]
     runs-on: ubuntu-latest
     permissions:
       contents: write
