@@ -154,16 +154,15 @@ jobs:
     steps:
     - uses: actions/checkout@v6
     - id: release
-      run: |
-        TAG=$(gh release list -R ${{ github.repository }} --limit 1 --json tagName | jq -r '.[0].tagName')
-        echo "tag=$TAG" >> $GITHUB_OUTPUT
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: actions/github-script@v9
+      with:
+        result-encoding: string
+        script: return (await github.rest.repos.getLatestRelease(context.repo)).data.tag_name
     - uses: ./
       with:
         name: wasm-cs
         version: 1.0.0
-        ref: ${{ steps.release.outputs.tag }}
+        ref: ${{ steps.release.outputs.result }}
     - run: wasm-cs -V
 
   release-create:
