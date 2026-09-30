@@ -2,7 +2,7 @@
   { "name": "cargo-expand", "version": "1.0.122" },
   { "name": "cargo-workspaces", "version": "0.2.35", "auto-update": false },
   { "name": "cargo-workspaces", "version": "0.4.2" },
-  { "name": "cargo-hack", "version": "0.6.44" },
+  { "name": "cargo-hack", "version": "0.6.45" },
   { "name": "cargo-set-rust-version", "version": "0.5.0" },
   { "name": "cargo-edit", "version": "0.13.10" },
   { "name": "cargo-fuzz", "version": "0.13.1" },
